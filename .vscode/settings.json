@@ -1,0 +1,14 @@
+{
+  "cSpell.enabled": false,
+  "spellright.ignoreFiles": [
+    "**/pubspec.lock"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+  ],
+  "spellright.language": [
+    "en"
+  ]
+}
