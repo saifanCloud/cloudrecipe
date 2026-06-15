@@ -241,6 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (mounted) _loadUserRecipes();
       },
       child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: cardWhite,
           borderRadius: BorderRadius.circular(16),
@@ -252,106 +253,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Gambar di kiri
             ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-              child: Stack(
-                children: [
-                  Image.network(
-                    recipe.imageUrl ?? 'https://via.placeholder.com/300x200?text=No+Image',
-                    height: 140,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 140,
-                      color: lightBg,
-                      child: const Icon(Icons.broken_image, size: 30),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+              ),
+              child: Image.network(
+                recipe.imageUrl ?? 'https://via.placeholder.com/300x200?text=No+Image',
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: 100,
+                  height: 100,
+                  color: lightBg,
+                  child: const Icon(Icons.broken_image, size: 30),
+                ),
+              ),
+            ),
+            // Konten di kanan
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      recipe.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: textDark,
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    top: 6,
-                    right: 6,
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.edit, size: 16, color: Colors.white),
-                            padding: const EdgeInsets.all(5),
-                            constraints: const BoxConstraints(),
-                            onPressed: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (_) => EditRecipeScreen(recipe: recipe)),
-                              );
-                              if (result == true && mounted) _loadUserRecipes();
-                            },
-                          ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: primaryColor.withAlpha(26),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: primaryColor.withAlpha(51), width: 0.5),
+                      ),
+                      child: Text(
+                        recipe.category,
+                        style: GoogleFonts.poppins(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: primaryColor,
                         ),
-                        const SizedBox(width: 4),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.delete, size: 16, color: Colors.white),
-                            padding: const EdgeInsets.all(5),
-                            constraints: const BoxConstraints(),
-                            onPressed: () => _confirmDelete(recipe),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                recipe.title,
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14, color: textDark),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: primaryColor.withAlpha(26),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: primaryColor.withAlpha(51), width: 0.5),
-                ),
-                child: Text(
-                  recipe.category,
-                  style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w500, color: primaryColor),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: textMedium.withAlpha(204),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: SizedBox(
-                height: 36,
-                child: Text(
-                  description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(fontSize: 12, color: textMedium.withAlpha(204)),
-                ),
-              ),
-            ),
-            const SizedBox(height: 6),
           ],
         ),
       ),
@@ -403,8 +375,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           "Profile",
           style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600, color: textDark),
         ),
-        backgroundColor: Colors.white, // latar putih solid
-        elevation: 0.5, // shadow tipis di batas bawah app bar
+        backgroundColor: Colors.white,
+        elevation: 0.5,
         actions: [
           IconButton(
             icon: Icon(Icons.logout, color: Colors.red, size: 24),
@@ -414,184 +386,183 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: isLoading
           ? const CustomLoadingIndicator()
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Profile Header Card
-                  Container(
-                    margin: const EdgeInsets.all(20),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: cardWhite,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 12,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
+          : Column(
+              children: [
+                // Profile Header Card
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: cardWhite,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 12,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: primaryColor.withAlpha(51),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: 55,
+                              backgroundColor: primaryColor,
+                              backgroundImage: imageProvider,
+                              child: !hasImage
+                                  ? Text(
+                                      displayName?.substring(0, 1).toUpperCase() ?? '?',
+                                      style: GoogleFonts.poppins(fontSize: 45, color: Colors.white),
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          if (isEditing)
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: CircleAvatar(
+                                backgroundColor: accentColor,
+                                radius: 18,
+                                child: IconButton(
+                                  icon: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                                  onPressed: _pickImage,
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (!isEditing)
+                            Text(
+                              displayName ?? email.split('@').first,
+                              style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w700, color: textDark),
+                            )
+                          else
+                            Expanded(
+                              child: TextField(
+                                controller: _nameController,
+                                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  hintText: 'Nama',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                ),
+                              ),
+                            ),
+                          if (!isEditing)
+                            IconButton(
+                              icon: Icon(Icons.edit, color: textDark, size: 20),
+                              onPressed: () {
+                                setState(() {
+                                  isEditing = true;
+                                  _nameController.text = displayName ?? '';
+                                });
+                              },
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        email,
+                        style: GoogleFonts.poppins(fontSize: 13, color: textMedium),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _statItem("${userRecipes.length}", "Recipes"),
+                          _statItem("1.2k", "Followers"),
+                          _statItem("234", "Following"),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                // My Recipes Section dengan tombol Saved
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "My Recipes",
+                        style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: textDark),
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedRecipesScreen()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: primaryColor.withAlpha(51),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
+                                color: primaryColor.withAlpha(26),
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(color: primaryColor, width: 1),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.bookmark, size: 14, color: primaryColor),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    "Saved",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: primaryColor,
+                                    ),
                                   ),
                                 ],
                               ),
-                              child: CircleAvatar(
-                                radius: 55,
+                            ),
+                          ),
+                          if (isEditing) ...[
+                            const SizedBox(width: 12),
+                            ElevatedButton(
+                              onPressed: _isUploading ? null : _updateProfile,
+                              style: ElevatedButton.styleFrom(
                                 backgroundColor: primaryColor,
-                                backgroundImage: imageProvider,
-                                child: !hasImage
-                                    ? Text(
-                                        displayName?.substring(0, 1).toUpperCase() ?? '?',
-                                        style: GoogleFonts.poppins(fontSize: 45, color: Colors.white),
-                                      )
-                                    : null,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                                minimumSize: const Size(60, 32),
                               ),
+                              child: _isUploading
+                                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                  : Text("Save", style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
                             ),
-                            if (isEditing)
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: CircleAvatar(
-                                  backgroundColor: accentColor,
-                                  radius: 18,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
-                                    onPressed: _pickImage,
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                  ),
-                                ),
-                              ),
                           ],
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (!isEditing)
-                              Text(
-                                displayName ?? email.split('@').first,
-                                style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w700, color: textDark),
-                              )
-                            else
-                              Expanded(
-                                child: TextField(
-                                  controller: _nameController,
-                                  style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w500),
-                                  textAlign: TextAlign.center,
-                                  decoration: InputDecoration(
-                                    hintText: 'Nama',
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  ),
-                                ),
-                              ),
-                            if (!isEditing)
-                              IconButton(
-                                icon: Icon(Icons.edit, color: textDark, size: 20),
-                                onPressed: () {
-                                  setState(() {
-                                    isEditing = true;
-                                    _nameController.text = displayName ?? '';
-                                  });
-                                },
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          email,
-                          style: GoogleFonts.poppins(fontSize: 14, color: textMedium),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _statItem("${userRecipes.length}", "Recipes"),
-                            _statItem("1.2k", "Followers"),
-                            _statItem("234", "Following"),
-                          ],
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
-                  // My Recipes Section dengan tombol Saved dan Save (saat edit)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "My Recipes",
-                          style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: textDark),
-                        ),
-                        Row(
-                          children: [
-                            // Tombol saved (bookmark)
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedRecipesScreen()));
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: primaryColor.withAlpha(26),
-                                  borderRadius: BorderRadius.circular(30),
-                                  border: Border.all(color: primaryColor, width: 1),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.bookmark, size: 14, color: primaryColor),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      "Saved",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: primaryColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            if (isEditing) ...[
-                              const SizedBox(width: 12),
-                              ElevatedButton(
-                                onPressed: _isUploading ? null : _updateProfile,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: primaryColor,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                                  minimumSize: const Size(60, 32),
-                                ),
-                                child: _isUploading
-                                    ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                                    : Text("Save", style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  userRecipes.isEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(40),
+                ),
+                // Recipe List dengan tombol edit dan hapus di pojok kanan atas
+                Expanded(
+                  child: userRecipes.isEmpty
+                      ? Center(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.restaurant_menu, size: 60, color: textMedium.withAlpha(128)),
                               const SizedBox(height: 12),
@@ -599,25 +570,164 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 "No recipes yet",
                                 style: GoogleFonts.poppins(fontSize: 16, color: textMedium),
                               ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Tap + button to add your first recipe",
+                                style: GoogleFonts.poppins(fontSize: 13, color: textMedium),
+                              ),
                             ],
                           ),
                         )
-                      : GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.all(8),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                            childAspectRatio: 0.72,
-                          ),
+                      : ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
                           itemCount: userRecipes.length,
-                          itemBuilder: (context, index) => _buildRecipeCard(userRecipes[index]),
+                          itemBuilder: (context, index) {
+                            final recipe = userRecipes[index];
+                            final description = _getDescription(recipe);
+                            return GestureDetector(
+                              onTap: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => RecipeDetailScreen(recipe: recipe)),
+                                );
+                                if (mounted) _loadUserRecipes();
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: cardWhite,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 6,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Gambar di kiri
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        bottomLeft: Radius.circular(16),
+                                      ),
+                                      child: Image.network(
+                                        recipe.imageUrl ?? 'https://via.placeholder.com/300x200?text=No+Image',
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) => Container(
+                                          width: 100,
+                                          height: 100,
+                                          color: lightBg,
+                                          child: const Icon(Icons.broken_image, size: 30),
+                                        ),
+                                      ),
+                                    ),
+                                    // Konten di kanan
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    recipe.title,
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 14,
+                                                      color: textDark,
+                                                    ),
+                                                  ),
+                                                ),
+                                                // Tombol edit dan hapus di pojok kanan atas
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey.withAlpha(26),
+                                                        borderRadius: BorderRadius.circular(16),
+                                                      ),
+                                                      child: IconButton(
+                                                        icon: const Icon(Icons.edit, size: 16, color: primaryColor),
+                                                        padding: const EdgeInsets.all(4),
+                                                        constraints: const BoxConstraints(),
+                                                        onPressed: () async {
+                                                          final result = await Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (_) => EditRecipeScreen(recipe: recipe)),
+                                                          );
+                                                          if (result == true && mounted) _loadUserRecipes();
+                                                        },
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey.withAlpha(26),
+                                                        borderRadius: BorderRadius.circular(16),
+                                                      ),
+                                                      child: IconButton(
+                                                        icon: const Icon(Icons.delete, size: 16, color: Colors.red),
+                                                        padding: const EdgeInsets.all(4),
+                                                        constraints: const BoxConstraints(),
+                                                        onPressed: () => _confirmDelete(recipe),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: primaryColor.withAlpha(26),
+                                                borderRadius: BorderRadius.circular(20),
+                                                border: Border.all(color: primaryColor.withAlpha(51), width: 0.5),
+                                              ),
+                                              child: Text(
+                                                recipe.category,
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: primaryColor,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              description,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                color: textMedium.withAlpha(204),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                  const SizedBox(height: 80),
-                ],
-              ),
+                ),
+              ],
             ),
       bottomNavigationBar: FloatingBottomNavBar(
         currentIndex: 4,
@@ -631,11 +741,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           value,
-          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w700, color: textDark),
+          style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w700, color: textDark),
         ),
         Text(
           label,
-          style: GoogleFonts.poppins(fontSize: 13, color: textMedium),
+          style: GoogleFonts.poppins(fontSize: 12, color: textMedium),
         ),
       ],
     );

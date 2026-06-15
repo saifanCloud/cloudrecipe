@@ -141,6 +141,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return GestureDetector(
       onTap: () => _openRecipeDetail(recipe),
       child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: cardWhite,
           borderRadius: BorderRadius.circular(16),
@@ -152,106 +153,97 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             ),
           ],
         ),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Gambar di kiri
             ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+              ),
               child: Image.network(
                 recipe.imageUrl ?? 'https://via.placeholder.com/300x200?text=No+Image',
-                height: 140,
-                width: double.infinity,
+                width: 100,
+                height: 100,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  height: 140,
+                  width: 100,
+                  height: 100,
                   color: lightBg,
                   child: const Icon(Icons.broken_image, size: 30),
                 ),
               ),
             ),
-            // Jarak gambar -> tombol (sama dengan Explore: 8)
-            const SizedBox(height: 8),
-            // Baris tombol like & save
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildActionChip(
-                    icon: recipe.isLiked ? Icons.favorite : Icons.favorite_border,
-                    label: '${recipe.likes}',
-                    isActive: recipe.isLiked,
-                    activeColor: Colors.red,
-                    onTap: () => _handleLikeToggle(recipe),
-                  ),
-                  const SizedBox(width: 12),
-                  _buildActionChip(
-                    icon: recipe.isSaved ? Icons.bookmark : Icons.bookmark_border,
-                    label: recipe.isSaved ? 'Saved' : 'Save',
-                    isActive: recipe.isSaved,
-                    activeColor: primaryColor,
-                    onTap: () => _handleSaveToggle(recipe),
-                  ),
-                ],
-              ),
-            ),
-            // Jarak tombol -> nama (sama dengan Explore: 8)
-            const SizedBox(height: 8),
-            // Nama resep (font 14)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                recipe.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: textDark,
+            // Konten di kanan
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      recipe.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: primaryColor.withAlpha(26),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: primaryColor.withAlpha(51), width: 0.5),
+                      ),
+                      child: Text(
+                        recipe.category,
+                        style: GoogleFonts.poppins(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: textMedium.withAlpha(204),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        _buildActionChip(
+                          icon: recipe.isLiked ? Icons.favorite : Icons.favorite_border,
+                          label: '${recipe.likes}',
+                          isActive: recipe.isLiked,
+                          activeColor: Colors.red,
+                          onTap: () => _handleLikeToggle(recipe),
+                        ),
+                        const SizedBox(width: 8),
+                        _buildActionChip(
+                          icon: recipe.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          label: recipe.isSaved ? 'Saved' : 'Save',
+                          isActive: recipe.isSaved,
+                          activeColor: primaryColor,
+                          onTap: () => _handleSaveToggle(recipe),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            // Jarak nama -> tag (sama dengan Explore: 6)
-            const SizedBox(height: 6),
-            // Tag (kategori) dengan gaya pill
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                decoration: BoxDecoration(
-                  color: primaryColor.withAlpha(26),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: primaryColor.withAlpha(51), width: 0.5),
-                ),
-                child: Text(
-                  recipe.category,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: primaryColor,
-                  ),
-                ),
-              ),
-            ),
-            // Jarak tag -> deskripsi (sama dengan Explore: 8)
-            const SizedBox(height: 8),
-            // Deskripsi (tinggi tetap 36, font 12)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: SizedBox(
-                height: 36,
-                child: Text(
-                  description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: textMedium.withAlpha(204),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 6),
           ],
         ),
       ),
@@ -313,16 +305,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     ],
                   ),
                 )
-              : GridView.builder(
-                  shrinkWrap: true,
+              : ListView.builder(
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.72,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   itemCount: favoriteRecipes.length,
                   itemBuilder: (context, index) => _buildRecipeCard(favoriteRecipes[index]),
                 ),

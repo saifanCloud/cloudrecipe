@@ -31,10 +31,11 @@ class CategoryGrid extends StatelessWidget {
         return GestureDetector(
           onTap: () => onCategoryTap(index),
           child: Container(
+            // 🔥 FIX 1: Beri padding agar konten punya "jarak aman" dari tepi lingkaran
+            padding: const EdgeInsets.all(6), 
             decoration: BoxDecoration(
               color: isActive ? const Color(0xFF2C3E50) : Colors.white,
               borderRadius: BorderRadius.circular(30),
-              // Shadow dan border untuk memperjelas batas
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
@@ -47,27 +48,34 @@ class CategoryGrid extends StatelessWidget {
                 width: 1,
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  cat.icon,
-                  style: TextStyle(
-                    fontSize: 26,
-                    color: isActive ? Colors.white : const Color(0xFF1E293B),
+            // 🔥 FIX 2: Bungkus Column dengan FittedBox agar otomatis mengecil
+            child: FittedBox(
+              fit: BoxFit.scaleDown, 
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    cat.icon,
+                    style: TextStyle(
+                      fontSize: 26,
+                      color: isActive ? Colors.white : const Color(0xFF1E293B),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  cat.name,
-                  style: GoogleFonts.poppins(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                    color: isActive ? Colors.white : const Color(0xFF1E293B),
+                  const SizedBox(height: 4),
+                  Text(
+                    cat.name,
+                    style: GoogleFonts.poppins(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      color: isActive ? Colors.white : const Color(0xFF1E293B),
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1, 
+                    overflow: TextOverflow.ellipsis, 
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
